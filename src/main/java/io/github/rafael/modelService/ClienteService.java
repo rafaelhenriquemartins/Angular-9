@@ -1,40 +1,18 @@
 package io.github.rafael.modelService;
 
 import io.github.rafael.modelEntity.Cliente;
-import io.github.rafael.modelRepository.ClientRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
+import io.github.rafael.modelException.ClienteException;
 
-@Service
-public class ClienteService {
+public interface ClienteService {
 
-    @Autowired
-    private ClientRepository clientRepository;
+    void someMethod();
 
-    public Cliente acharCliente(Integer id) {
-        return clientRepository.findById(id)
-                .orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND));
-    }
+    Cliente acharCliente(Integer id);
 
-    public void deletar(Integer id) {
-        clientRepository.findById(id)
-                .map( cliente -> {
-                    clientRepository.delete(cliente);
-                    return Void.TYPE;
-                })
-                .orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND));
-    }
+    void salvar (Cliente cliente) throws ClienteException;
 
+    void deletarById(Integer id);
+      
+    void atualizar(Integer id, Cliente cliente);
 
-    public void atualizar(Integer id, Cliente cliente) {
-        clientRepository.findById(id)
-                .map( cli -> {
-                    cli.setNome(cliente.getNome());
-                    cli.setCpf(cliente.getCpf());
-                    return clientRepository.save(cli);
-                })
-                .orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND));
-    }
 }
