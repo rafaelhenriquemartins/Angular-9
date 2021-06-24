@@ -19,9 +19,9 @@ public class Cliente {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
+//  @NotEmpty(message = "{campo.nome.obrigatorio}")
     @Column(nullable = false, length = 150)
-    @NotEmpty(message = "{campo.nome.obrigatorio}")
+    @NotEmpty(message = "O campo nome é obrigatório.")
     private String nome;
 
     @Column(nullable = false, length = 11)
@@ -32,6 +32,12 @@ public class Cliente {
     @Column(name = "data_cadastro", updatable = false)
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate dataCadastro;
+
+    public Cliente(Integer id,String nome, String cpf) {
+        this.id = id;
+        this.nome = nome;
+        this.cpf = cpf;
+    }
 
     @PrePersist
     public void prePersist(){

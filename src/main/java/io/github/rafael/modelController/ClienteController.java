@@ -2,7 +2,9 @@ package io.github.rafael.modelController;
 
 import io.github.rafael.modelEntity.Cliente;
 
+import io.github.rafael.modelException.ClienteException;
 import io.github.rafael.modelRepository.ClientRepository;
+import io.github.rafael.modelService.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -17,10 +19,12 @@ import java.util.List;
 public class ClienteController {
 
     private final ClientRepository repository;
+    private final ClienteService service;
 
     @Autowired
-    public ClienteController(ClientRepository repository) {
+    public ClienteController(ClientRepository repository, ClienteService service) {
         this.repository = repository;
+        this.service = service;
     }
 
     @GetMapping
@@ -30,8 +34,9 @@ public class ClienteController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Cliente salvar( @RequestBody @Valid Cliente cliente ){
-        return repository.save(cliente);
+    public void salvar(@RequestBody @Valid Cliente cliente ) throws ClienteException {
+        service.salvar(cliente);
+
     }
 
     @GetMapping("{id}")
@@ -43,7 +48,7 @@ public class ClienteController {
 
     @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deletar( @PathVariable Integer id ){
+    public void deletarById( @PathVariable Integer id ){
         repository
                 .findById(id)
                 .map( cliente -> {
